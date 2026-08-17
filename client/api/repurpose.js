@@ -83,8 +83,8 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ success: true, results: parsed });
     } catch (aiError) {
-      console.error('AI Error, falling back to mock:', aiError.message);
-      return res.status(200).json({ success: true, results: MOCK_RESPONSE });
+      console.error('AI Error:', aiError.message);
+      return res.status(500).json({ success: false, error: `AI API Error: ${aiError.message}` });
     }
 
   } catch (error) {
