@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     // Real AI mode
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
       const prompt = buildRepurposePrompt(content);
       const result = await model.generateContent(prompt);
@@ -84,7 +84,10 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, results: parsed });
     } catch (aiError) {
       console.error('AI Error:', aiError.message);
-      return res.status(500).json({ success: false, error: `AI API Error: ${aiError.message}` });
+      return res.status(500).json({ 
+        success: false, 
+        error: `AI API Error: ${aiError.message}. This usually means your API Key is invalid or your Google Cloud Project doesn't have the Generative Language API enabled.` 
+      });
     }
 
   } catch (error) {
