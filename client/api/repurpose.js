@@ -84,9 +84,19 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, results: parsed });
     } catch (aiError) {
       console.error('AI Error:', aiError.message);
+      
+      let availableModels = "Could not fetch models.";
+      try {
+        const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const modelsData = await modelsRes.json();
+        availableModels = modelsData.models ? modelsData.models.map(m => m.name).join(', ') : JSON.stringify(modelsData);
+      } catch (e) {
+        console.error('Error fetching models list:', e);
+      }
+
       return res.status(500).json({ 
         success: false, 
-        error: `AI API Error: ${aiError.message}. This usually means your API Key is invalid or your Google Cloud Project doesn't have the Generative Language API enabled.` 
+        error: `AI API Error: ${aiError.message}. \n\nAVAILABLE MODELS FOR YOUR KEY: ${availableModels}` 
       });
     }
 
