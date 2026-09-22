@@ -19,7 +19,7 @@ function App() {
     setResults(null);
 
     try {
-      const response = await axios.post('/api/repurpose', { content: inputText });
+      const response = await axios.post('https://ai-powered-content-repurposer.onrender.com/api/repurpose', { content: inputText });
       setResults(response.data.results);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to generate content. Please try again.');
